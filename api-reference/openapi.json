@@ -115,7 +115,6 @@
     }
   }
 }
-,
           "400": {
             "description": "Unexpected error",
             "content": {
