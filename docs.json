@@ -22,8 +22,8 @@
           {
             "group": "Examples",
             "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/get"
+              "api-reference/endpoint/top-holders",
+              "api-reference/endpoint/avg-entry"
             ]
           }
         ]
