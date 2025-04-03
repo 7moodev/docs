@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "Munki",
+  "theme": "palm",
   "name": "Munki Analytics",
   "colors": {
     "primary": "#FFEE64",
