@@ -13,11 +13,6 @@
       "url": "https://munki-webapp.onrender.com"
     }
   ],
-  "security": [
-    {
-      "bearerAuth": []
-    }
-  ],
   "paths": {
     "/top-holders": {
       "get": {
@@ -67,93 +62,8 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "token_info": {
-                          "type": "object",
-                          "properties": {
-                            "price": {
-                              "type": "number"
-                            },
-                            "symbol": {
-                              "type": "string"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "logoURI": {
-                              "type": "string"
-                            },
-                            "liquidity": {
-                              "type": "number"
-                            },
-                            "market_cap": {
-                              "type": "number"
-                            },
-                            "supply": {
-                              "type": "number"
-                            },
-                            "circulatingSupply": {
-                              "type": "number"
-                            },
-                            "fdv": {
-                              "type": "number"
-                            },
-                            "holder": {
-                              "type": "integer"
-                            },
-                            "extensions": {
-                              "type": "object",
-                              "properties": {
-                                "twitter": {
-                                  "type": "string"
-                                },
-                                "description": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "priceChange1hPercent": {
-                              "type": "number"
-                            },
-                            "creationTime": {
-                              "type": "integer"
-                            }
-                          }
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "count": {
-                                "type": "integer"
-                              },
-                              "wallet": {
-                                "type": "string"
-                              },
-                              "amount": {
-                                "type": "number"
-                              },
-                              "share_in_percent": {
-                                "type": "number"
-                              },
-                              "net_worth": {
-                                "type": "number"
-                              },
-                              "net_worth_excluding": {
-                                "type": "number"
-                              },
-                              "first_top_holding": {
-                                "$ref": "#/components/schemas/Holding"
-                              },
-                              "second_top_holding": {
-                                "$ref": "#/components/schemas/Holding"
-                              },
-                              "third_top_holding": {
-                                "$ref": "#/components/schemas/Holding"
-                              }
-                            }
-                          }
-                        }
+                        "token_info": { /* ... */ },
+                        "items": { /* ... */ }
                       }
                     }
                   }
@@ -222,150 +132,9 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "token_info": {
-                          "type": "object",
-                          "properties": {
-                            "price": {
-                              "type": "number"
-                            },
-                            "symbol": {
-                              "type": "string"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "logoURI": {
-                              "type": "string"
-                            },
-                            "liquidity": {
-                              "type": "number"
-                            },
-                            "market_cap": {
-                              "type": "number"
-                            },
-                            "supply": {
-                              "type": "number"
-                            },
-                            "circulatingSupply": {
-                              "type": "number"
-                            },
-                            "fdv": {
-                              "type": "number"
-                            },
-                            "holder": {
-                              "type": "integer"
-                            },
-                            "extensions": {
-                              "type": "object",
-                              "properties": {
-                                "twitter": {
-                                  "type": "string"
-                                },
-                                "description": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "priceChange1hPercent": {
-                              "type": "number"
-                            },
-                            "creationTime": {
-                              "type": "integer"
-                            }
-                          }
-                        },
-                        "agg_avg": {
-                          "type": "number"
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "count": {
-                                "type": "integer"
-                              },
-                              "holder": {
-                                "type": "string"
-                              },
-                              "holding": {
-                                "type": "number"
-                              },
-                              "label": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "avg_raw_entry_price": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "avg_entry_price": {
-                                    "type": "number"
-                                  },
-                                  "total_amount": {
-                                    "type": "number"
-                                  },
-                                  "sniped_pfun": {
-                                    "type": "boolean"
-                                  },
-                                  "oldest_trade_time": {
-                                    "type": "integer"
-                                  },
-                                  "oldest_tx_hash": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "avg_raw_exit_price": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "avg_exit_price": {
-                                    "type": "number"
-                                  },
-                                  "total_amount": {
-                                    "type": "number"
-                                  },
-                                  "oldest_trade_time": {
-                                    "type": "integer"
-                                  },
-                                  "oldest_tx_hash": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "avg_actual_holding_price": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "avg_holding_price": {
-                                    "type": "number"
-                                  },
-                                  "current_holding_amount": {
-                                    "type": "number"
-                                  },
-                                  "rebuy_detected": {
-                                    "type": "boolean"
-                                  },
-                                  "label": {
-                                    "type": [
-                                      "string",
-                                      "null"
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        }
+                        "token_info": { /* ... */ },
+                        "agg_avg": { "type": "number" },
+                        "items": { /* ... */ }
                       }
                     }
                   }
@@ -389,65 +158,14 @@
   },
   "components": {
     "schemas": {
-      "Holding": {
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "decimals": {
-            "type": "integer"
-          },
-          "balance": {
-            "type": "number"
-          },
-          "uiAmount": {
-            "type": "number"
-          },
-          "chainId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "symbol": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          },
-          "logoURI": {
-            "type": "string"
-          },
-          "priceUsd": {
-            "type": "number"
-          },
-          "valueUsd": {
-            "type": "number"
-          }
-        }
-      },
+      "Holding": { /* ... */ },
       "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
+        "required": ["error", "message"],
         "type": "object",
         "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
+          "error": { "type": "integer", "format": "int32" },
+          "message": { "type": "string" }
         }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
       }
     }
   }
