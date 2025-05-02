@@ -23,7 +23,9 @@
             "group": "Examples",
             "pages": [
               "api-reference/endpoint/top-holders",
-              "api-reference/endpoint/avg-entry"
+              "api-reference/endpoint/avg-entry",
+              "api-reference/endpoint/top-traders",
+              
             ]
           }
         ]
