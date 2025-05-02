@@ -1,563 +1,644 @@
 {
-  "openapi": "3.1.0",
-  "info": {
-    "title": "Munki API",
-    "description": "API for fetching top token holders and related on-chain information.",
-    "license": {
-      "name": "MIT"
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Munki API",
+        "description": "API for fetching top token holders and related on-chain information.",
+        "license": {
+            "name": "MIT"
+        },
+        "version": "1.0.0"
     },
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "https://munki-webapp.onrender.com"
-    }
-  ],
-  "paths": {
-    "/top-holders": {
-      "get": {
-        "description": "Returns the top x holders and their top holdings",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "query",
-            "required": true,
-            "description": "Token address to analyze",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Max number of holders to include (default 50, max 50)",
-            "schema": {
-              "type": "integer",
-              "default": 50
-            }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "required": true,
-            "description": "Your public API key",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Top holders and token metadata",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean",
-                      "example": true
-                    },
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "token_info": {
-                          "type": "object",
-                          "properties": {
-                            "price": {
-                              "type": "number"
-                            },
-                            "symbol": {
-                              "type": "string"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "logoURI": {
-                              "type": "string"
-                            },
-                            "liquidity": {
-                              "type": "number"
-                            },
-                            "market_cap": {
-                              "type": "number"
-                            },
-                            "supply": {
-                              "type": "number"
-                            },
-                            "circulatingSupply": {
-                              "type": "number"
-                            },
-                            "fdv": {
-                              "type": "number"
-                            },
-                            "holder": {
-                              "type": "integer"
-                            },
-                            "extensions": {
-                              "type": "object",
-                              "properties": {
-                                "twitter": {
-                                  "type": "string"
-                                },
-                                "description": {
-                                  "type": "string"
-                                }
-                              }
-                            },
-                            "priceChange1hPercent": {
-                              "type": "number"
-                            },
-                            "creationTime": {
-                              "type": "integer"
-                            }
-                          }
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "count": {
-                                "type": "integer"
-                              },
-                              "wallet": {
-                                "type": "string"
-                              },
-                              "amount": {
-                                "type": "number"
-                              },
-                              "share_in_percent": {
-                                "type": "number"
-                              },
-                              "net_worth": {
-                                "type": "number"
-                              },
-                              "net_worth_excluding": {
-                                "type": "number"
-                              },
-                              "first_top_holding": {
-                                "$ref": "#/components/schemas/Holding"
-                              },
-                              "second_top_holding": {
-                                "$ref": "#/components/schemas/Holding"
-                              },
-                              "third_top_holding": {
-                                "$ref": "#/components/schemas/Holding"
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
+    "servers": [
+        {
+            "url": "https://munki-webapp.onrender.com"
         }
-      }
-    },
-    "/top-traders": {
-      "get": {
-        "summary": "Top profitable traders",
-        "description": "Returns the most profitable wallets over the chosen interval (24 h or 7 d).",
-        "parameters": [
-          {
-            "name": "interval",
-            "in": "query",
-            "required": true,
-            "description": "`1D` (last 24 h) or `1W` (last 7 d).",
-            "schema": { "type": "string", "enum": ["1D", "1W"] }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Number of traders to return (1–50, default 10).",
-            "schema": { "type": "integer", "minimum": 1, "maximum": 50, "default": 10 }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "required": true,
-            "description": "Your Munki **public API key**.",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/TopTradersResponse" },
-                "examples": {
-                  "sample": {
-                    "value": {
-                      "success": true,
-                      "data": {
-                        "items": [
-                          {
-                            "timestamp": 1746223493,
-                            "type": "today",
-                            "limit": 10,
-                            "items": [
-                              {
-                                "network": "solana",
-                                "address": "9Rm7J5NVKjdskQBGBu34VeD6hY5ZrZJ2k5r2HKHe4t4M",
-                                "pnl": 1251175.6972628946,
-                                "volume": 1254976.1048032418,
-                                "trade_count": 7
-                              },
-                              {
-                                "network": "solana",
-                                "address": "2C5n9nGrWkniwgcN9UZQk16QQU1sPBe9v9Fg9Y9VKmDo",
-                                "pnl": 1208503.367899568,
-                                "volume": 1063589.0049452886,
-                                "trade_count": 7
-                              }
-                              /* …8 more … */
+    ],
+    "paths": {
+        "/top-holders": {
+            "get": {
+                "description": "Returns the top x holders and their top holdings",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "description": "Token address to analyze",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "description": "Max number of holders to include (default 50, max 50)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "required": true,
+                        "description": "Your public API key",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Top holders and token metadata",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "token_info": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "price": {
+                                                            "type": "number"
+                                                        },
+                                                        "symbol": {
+                                                            "type": "string"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "logoURI": {
+                                                            "type": "string"
+                                                        },
+                                                        "liquidity": {
+                                                            "type": "number"
+                                                        },
+                                                        "market_cap": {
+                                                            "type": "number"
+                                                        },
+                                                        "supply": {
+                                                            "type": "number"
+                                                        },
+                                                        "circulatingSupply": {
+                                                            "type": "number"
+                                                        },
+                                                        "fdv": {
+                                                            "type": "number"
+                                                        },
+                                                        "holder": {
+                                                            "type": "integer"
+                                                        },
+                                                        "extensions": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "twitter": {
+                                                                    "type": "string"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "priceChange1hPercent": {
+                                                            "type": "number"
+                                                        },
+                                                        "creationTime": {
+                                                            "type": "integer"
+                                                        }
+                                                    }
+                                                },
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "count": {
+                                                                "type": "integer"
+                                                            },
+                                                            "wallet": {
+                                                                "type": "string"
+                                                            },
+                                                            "amount": {
+                                                                "type": "number"
+                                                            },
+                                                            "share_in_percent": {
+                                                                "type": "number"
+                                                            },
+                                                            "net_worth": {
+                                                                "type": "number"
+                                                            },
+                                                            "net_worth_excluding": {
+                                                                "type": "number"
+                                                            },
+                                                            "first_top_holding": {
+                                                                "$ref": "#/components/schemas/Holding"
+                                                            },
+                                                            "second_top_holding": {
+                                                                "$ref": "#/components/schemas/Holding"
+                                                            },
+                                                            "third_top_holding": {
+                                                                "$ref": "#/components/schemas/Holding"
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/top-traders": {
+            "get": {
+                "summary": "Top profitable traders",
+                "description": "Returns the most profitable wallets over the chosen interval (24 h or 7 d).",
+                "parameters": [
+                    {
+                        "name": "interval",
+                        "in": "query",
+                        "required": true,
+                        "description": "`1D` (last 24 h) or `1W` (last 7 d).",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "1D",
+                                "1W"
                             ]
-                          }
-                        ]
-                      }
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "description": "Number of traders to return (1–50, default 10).",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 50,
+                            "default": 10
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "required": true,
+                        "description": "Your Munki **public API key**.",
+                        "schema": {
+                            "type": "string"
+                        }
                     }
-                  }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TopTradersResponse"
+                                },
+                                "examples": {
+                                    "sample": {
+                                        "value": {
+                                            "success": true,
+                                            "data": {
+                                                "items": [
+                                                    {
+                                                        "timestamp": 1746223493,
+                                                        "type": "today",
+                                                        "limit": 10,
+                                                        "items": [
+                                                            {
+                                                                "network": "solana",
+                                                                "address": "9Rm7J5NVKjdskQBGBu34VeD6hY5ZrZJ2k5r2HKHe4t4M",
+                                                                "pnl": 1251175.6972628946,
+                                                                "volume": 1254976.1048032418,
+                                                                "trade_count": 7
+                                                            },
+                                                            {
+                                                                "network": "solana",
+                                                                "address": "2C5n9nGrWkniwgcN9UZQk16QQU1sPBe9v9Fg9Y9VKmDo",
+                                                                "pnl": 1208503.367899568,
+                                                                "volume": 1063589.0049452886,
+                                                                "trade_count": 7
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid interval or limit",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "Missing/invalid API key",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
                 }
-              }
             }
-          },
-          "400": { "description": "Invalid interval or limit",  "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "403": { "description": "Missing/invalid API key",    "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } },
-          "500": { "description": "Server error",               "content": { "application/json": { "schema": { "$ref": "#/components/schemas/Error" } } } }
+        },
+        "/avg-entry": {
+            "get": {
+                "description": "Returns the average entry price of token holders for a specific token.",
+                "parameters": [
+                    {
+                        "name": "token",
+                        "in": "query",
+                        "required": true,
+                        "description": "Token address to analyze",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": false,
+                        "description": "Max number of holders to include (default 50, max 50)",
+                        "schema": {
+                            "type": "integer",
+                            "default": 50
+                        }
+                    },
+                    {
+                        "name": "x-api-key",
+                        "in": "header",
+                        "required": true,
+                        "description": "Your public API key",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Average entry data with token metadata and holder insights",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "success": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "data": {
+                                            "type": "object",
+                                            "properties": {
+                                                "token_info": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "price": {
+                                                            "type": "number"
+                                                        },
+                                                        "symbol": {
+                                                            "type": "string"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "logoURI": {
+                                                            "type": "string"
+                                                        },
+                                                        "liquidity": {
+                                                            "type": "number"
+                                                        },
+                                                        "market_cap": {
+                                                            "type": "number"
+                                                        },
+                                                        "supply": {
+                                                            "type": "number"
+                                                        },
+                                                        "circulatingSupply": {
+                                                            "type": "number"
+                                                        },
+                                                        "fdv": {
+                                                            "type": "number"
+                                                        },
+                                                        "holder": {
+                                                            "type": "integer"
+                                                        },
+                                                        "extensions": {
+                                                            "type": "object",
+                                                            "properties": {
+                                                                "twitter": {
+                                                                    "type": "string"
+                                                                },
+                                                                "description": {
+                                                                    "type": "string"
+                                                                }
+                                                            }
+                                                        },
+                                                        "priceChange1hPercent": {
+                                                            "type": "number"
+                                                        },
+                                                        "creationTime": {
+                                                            "type": "integer"
+                                                        }
+                                                    }
+                                                },
+                                                "agg_avg": {
+                                                    "type": "number"
+                                                },
+                                                "items": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "count": {
+                                                                "type": "integer"
+                                                            },
+                                                            "holder": {
+                                                                "type": "string"
+                                                            },
+                                                            "holding": {
+                                                                "type": "number"
+                                                            },
+                                                            "label": {
+                                                                "type": [
+                                                                    "string",
+                                                                    "null"
+                                                                ]
+                                                            },
+                                                            "avg_raw_entry_price": {
+                                                                "type": [
+                                                                    "object",
+                                                                    "null"
+                                                                ],
+                                                                "properties": {
+                                                                    "avg_entry_price": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "total_amount": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "sniped_pfun": {
+                                                                        "type": "boolean"
+                                                                    },
+                                                                    "oldest_trade_time": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "oldest_tx_hash": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "avg_raw_exit_price": {
+                                                                "type": [
+                                                                    "object",
+                                                                    "null"
+                                                                ],
+                                                                "properties": {
+                                                                    "avg_exit_price": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "total_amount": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "oldest_trade_time": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "oldest_tx_hash": {
+                                                                        "type": "string"
+                                                                    }
+                                                                }
+                                                            },
+                                                            "avg_actual_holding_price": {
+                                                                "type": [
+                                                                    "object",
+                                                                    "null"
+                                                                ],
+                                                                "properties": {
+                                                                    "avg_holding_price": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "current_holding_amount": {
+                                                                        "type": "number"
+                                                                    },
+                                                                    "rebuy_detected": {
+                                                                        "type": "boolean"
+                                                                    },
+                                                                    "label": {
+                                                                        "type": [
+                                                                            "string",
+                                                                            "null"
+                                                                        ]
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Unexpected error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Error"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
-      }
-    }
-  ,
-    "/avg-entry": {
-      "get": {
-        "description": "Returns the average entry price of token holders for a specific token.",
-        "parameters": [
-          {
-            "name": "token",
-            "in": "query",
-            "required": true,
-            "description": "Token address to analyze",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "limit",
-            "in": "query",
-            "required": false,
-            "description": "Max number of holders to include (default 50, max 50)",
-            "schema": {
-              "type": "integer",
-              "default": 50
-            }
-          },
-          {
-            "name": "x-api-key",
-            "in": "header",
-            "required": true,
-            "description": "Your public API key",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Average entry data with token metadata and holder insights",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
+    },
+    "components": {
+        "schemas": {
+            "TraderStat": {
+                "type": "object",
+                "properties": {
+                    "network": {
+                        "type": "string",
+                        "example": "solana"
+                    },
+                    "address": {
+                        "type": "string",
+                        "example": "9Rm7J5…He4t4M"
+                    },
+                    "pnl": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Profit & loss (USD)"
+                    },
+                    "volume": {
+                        "type": "number",
+                        "format": "double",
+                        "description": "Total traded volume (USD)"
+                    },
+                    "trade_count": {
+                        "type": "integer",
+                        "example": 7
+                    }
+                },
+                "required": [
+                    "network",
+                    "address",
+                    "pnl"
+                ]
+            },
+            "TopTradersBatch": {
+                "type": "object",
+                "properties": {
+                    "timestamp": {
+                        "type": "integer",
+                        "example": 1746223493
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "today",
+                        "description": "`1D`, `1W`, or a friendly alias used internally."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/TraderStat"
+                        }
+                    }
+                },
+                "required": [
+                    "timestamp",
+                    "items"
+                ]
+            },
+            "TopTradersResponse": {
+                "type": "object",
+                "properties": {
                     "success": {
-                      "type": "boolean",
-                      "example": true
+                        "type": "boolean",
+                        "example": true
                     },
                     "data": {
-                      "type": "object",
-                      "properties": {
-                        "token_info": {
-                          "type": "object",
-                          "properties": {
-                            "price": {
-                              "type": "number"
-                            },
-                            "symbol": {
-                              "type": "string"
-                            },
-                            "name": {
-                              "type": "string"
-                            },
-                            "logoURI": {
-                              "type": "string"
-                            },
-                            "liquidity": {
-                              "type": "number"
-                            },
-                            "market_cap": {
-                              "type": "number"
-                            },
-                            "supply": {
-                              "type": "number"
-                            },
-                            "circulatingSupply": {
-                              "type": "number"
-                            },
-                            "fdv": {
-                              "type": "number"
-                            },
-                            "holder": {
-                              "type": "integer"
-                            },
-                            "extensions": {
-                              "type": "object",
-                              "properties": {
-                                "twitter": {
-                                  "type": "string"
-                                },
-                                "description": {
-                                  "type": "string"
+                        "type": "object",
+                        "properties": {
+                            "items": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/TopTradersBatch"
                                 }
-                              }
-                            },
-                            "priceChange1hPercent": {
-                              "type": "number"
-                            },
-                            "creationTime": {
-                              "type": "integer"
                             }
-                          }
-                        },
-                        "agg_avg": {
-                          "type": "number"
-                        },
-                        "items": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "count": {
-                                "type": "integer"
-                              },
-                              "holder": {
-                                "type": "string"
-                              },
-                              "holding": {
-                                "type": "number"
-                              },
-                              "label": {
-                                "type": [
-                                  "string",
-                                  "null"
-                                ]
-                              },
-                              "avg_raw_entry_price": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "avg_entry_price": {
-                                    "type": "number"
-                                  },
-                                  "total_amount": {
-                                    "type": "number"
-                                  },
-                                  "sniped_pfun": {
-                                    "type": "boolean"
-                                  },
-                                  "oldest_trade_time": {
-                                    "type": "integer"
-                                  },
-                                  "oldest_tx_hash": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "avg_raw_exit_price": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "avg_exit_price": {
-                                    "type": "number"
-                                  },
-                                  "total_amount": {
-                                    "type": "number"
-                                  },
-                                  "oldest_trade_time": {
-                                    "type": "integer"
-                                  },
-                                  "oldest_tx_hash": {
-                                    "type": "string"
-                                  }
-                                }
-                              },
-                              "avg_actual_holding_price": {
-                                "type": [
-                                  "object",
-                                  "null"
-                                ],
-                                "properties": {
-                                  "avg_holding_price": {
-                                    "type": "number"
-                                  },
-                                  "current_holding_amount": {
-                                    "type": "number"
-                                  },
-                                  "rebuy_detected": {
-                                    "type": "boolean"
-                                  },
-                                  "label": {
-                                    "type": [
-                                      "string",
-                                      "null"
-                                    ]
-                                  }
-                                }
-                              }
-                            }
-                          }
                         }
-                      }
                     }
-                  }
+                },
+                "required": [
+                    "success",
+                    "data"
+                ]
+            },
+            "Holding": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string"
+                    },
+                    "decimals": {
+                        "type": "integer"
+                    },
+                    "balance": {
+                        "type": "number"
+                    },
+                    "uiAmount": {
+                        "type": "number"
+                    },
+                    "chainId": {
+                        "type": "string"
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "symbol": {
+                        "type": "string"
+                    },
+                    "icon": {
+                        "type": "string"
+                    },
+                    "logoURI": {
+                        "type": "string"
+                    },
+                    "priceUsd": {
+                        "type": "number"
+                    },
+                    "valueUsd": {
+                        "type": "number"
+                    }
                 }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
+            },
+            "Error": {
+                "required": [
+                    "error",
+                    "message"
+                ],
+                "type": "object",
+                "properties": {
+                    "error": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "message": {
+                        "type": "string"
+                    }
                 }
-              }
             }
-          }
-        }
-      }
+        },
+        "securitySchemes": {}
     }
-  },
-  "components": {
-    "schemas": {
-      "TraderStat": {
-        "type": "object",
-        "properties": {
-          "network":      { "type": "string",  "example": "solana" },
-          "address":      { "type": "string",  "example": "9Rm7J5…He4t4M" },
-          "pnl":          { "type": "number",  "format": "double", "description": "Profit & loss (USD)" },
-          "volume":       { "type": "number",  "format": "double", "description": "Total traded volume (USD)" },
-          "trade_count":  { "type": "integer", "example": 7 }
-        },
-        "required": ["network", "address", "pnl"]
-      },
-
-      "TopTradersBatch": {
-        "type": "object",
-        "properties": {
-          "timestamp": { "type": "integer", "example": 1746223493 },
-          "type":      { "type": "string",  "example": "today", "description": "`1D`, `1W`, or a friendly alias used internally." },
-          "limit":     { "type": "integer", "example": 10 },
-          "items":     {
-            "type": "array",
-            "items": { "$ref": "#/components/schemas/TraderStat" }
-          }
-        },
-        "required": ["timestamp", "items"]
-      },
-
-      "TopTradersResponse": {
-        "type": "object",
-        "properties": {
-          "success": { "type": "boolean", "example": true },
-          "data": {
-            "type": "object",
-            "properties": {
-              "items": {
-                "type": "array",
-                "items": { "$ref": "#/components/schemas/TopTradersBatch" }
-              }
-            }
-          }
-        },
-        "required": ["success", "data"]
-      },
-      "Holding": {
-        "type": "object",
-        "properties": {
-          "address": {
-            "type": "string"
-          },
-          "decimals": {
-            "type": "integer"
-          },
-          "balance": {
-            "type": "number"
-          },
-          "uiAmount": {
-            "type": "number"
-          },
-          "chainId": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "symbol": {
-            "type": "string"
-          },
-          "icon": {
-            "type": "string"
-          },
-          "logoURI": {
-            "type": "string"
-          },
-          "priceUsd": {
-            "type": "number"
-          },
-          "valueUsd": {
-            "type": "number"
-          }
-        }
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-    }
-  }
 }
