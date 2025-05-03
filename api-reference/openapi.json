@@ -169,7 +169,7 @@
                 }
             }
         },
-        "/top-traders": {
+        "/top-traders/": {
             "get": {
                 "summary": "Top profitable traders",
                 "description": "Returns the most profitable wallets over the chosen interval (24 h or 7 d).",
@@ -285,7 +285,7 @@
                 }
             }
         },
-        "/avg-entry": {
+        "/avg-entry/": {
             "get": {
                 "description": "Returns the average entry price of token holders for a specific token.",
                 "parameters": [
