@@ -14,7 +14,7 @@
         }
     ],
     "paths": {
-        "/top-holders": {
+        "/top-holders/": {
             "get": {
                 "description": "Returns the top x holders and their top holdings",
                 "parameters": [
